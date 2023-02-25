@@ -29,6 +29,7 @@ namespace VarietyStoreAPI {
                         );
                     services.AddScoped<IUserRepositorie, UserRepositorie>();
                     services.AddScoped<IProductRepositorie, ProductRepositorie>();
+                    services.AddScoped<IOrderRepositorie, OrderRepositorie>();
                 })
                 .ConfigureWebHostDefaults(webBuilder => {
                     webBuilder.UseStartup<Startup>();
