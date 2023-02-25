@@ -1,0 +1,57 @@
+﻿@using VarietyStoreFront.Models
+@using System.Net.Http
+@{
+    ViewData["Title"] = "Order List";
+    List<Product> products = new List<Product>();
+
+    HttpClient client = new HttpClient();
+    string apiUrl = "https://localhost:44314/api/product";
+
+    try {
+        HttpResponseMessage response = await client.GetAsync(apiUrl);
+        if (response.IsSuccessStatusCode) {
+            products = await response.Content.ReadAsAsync<List<Product>>();
+        }
+    }
+    catch (Exception ex) {
+        Console.WriteLine($"Erro ao chamar API: {ex.Message}");
+    }
+
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Products</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <h2 class="text-center mb-4">Products</h2>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var product in products) {
+                            <tr>
+                                <td>@product.Name</td>
+                                <td>@product.Price</td>
+                                <td>@product.Quantity</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

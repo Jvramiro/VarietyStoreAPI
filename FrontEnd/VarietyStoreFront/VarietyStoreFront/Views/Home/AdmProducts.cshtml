@@ -1,0 +1,69 @@
+﻿@using VarietyStoreFront.Models
+@using System.Net.Http
+@{
+    ViewData["Title"] = "Product List";
+    List<Product> products = new List<Product>();
+
+    HttpClient client = new HttpClient();
+    string apiUrl = "https://localhost:44314/api/product";
+
+    try {
+        HttpResponseMessage response = await client.GetAsync(apiUrl);
+        if (response.IsSuccessStatusCode) {
+            products = await response.Content.ReadAsAsync<List<Product>>();
+        }
+    }
+    catch (Exception ex) {
+        Console.WriteLine($"Erro ao chamar API: {ex.Message}");
+    }
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Products</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <h2 class="text-center mb-4">Product List</h2>
+                <form method="post" action="@Url.Action("Update", "Product")">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var product in products) {
+                                <tr>
+                                    <td>
+                                        <input type="text" name="Name" value="@product.Name" />
+                                        <input type="hidden" name="Id" value="@product.id" />
+                                    </td>
+                                    <td>
+                                        <input type="text" name="Price" value="@product.Price" />
+                                    </td>
+                                    <td>
+                                        <input type="text" name="Quantity" value="@product.Quantity" />
+                                    </td>
+                                    <td>
+                                        <button type="submit" class="btn btn-primary">Update</button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
